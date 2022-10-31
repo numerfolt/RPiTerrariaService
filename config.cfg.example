@@ -8,7 +8,7 @@ DEBUGGING=false
 TERRARIA_PATH=/opt/terraria
 
 # Terraria server executable
-TERRARIA_BINARY=TerrariaServer.bin.x86_64
+TERRARIA_BINARY=TerrariaServer.exe
 
 ## Service
 # Service path
