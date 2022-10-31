@@ -9,7 +9,7 @@ Make sure that you have downloaded the dedicated terraria server from [the offic
 ### Repository and configuration files
 ```bash
 # Clone the repository to a directory such as /opt/
-$ git clone https://github.com/Arceden/TerrariaService
+$ git clone https://github.com/numerfolt/TerrariaService.git
 $ cd TerrariaService/
 ```
 
