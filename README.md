@@ -1,7 +1,7 @@
 # TerrariaService
 Service script for Terraria dedicated servers on Raspberry Pi OS or other OSes.
 This service script lets you start, stop and save the server while running it in the background to avoid using programs like tmux and screen.
-Additionally you can use the script to invoke the terraria server commands kick, ban, password, version, time, port, maxplayers, say, motd, dawn, noon, dusk, midnight and settle.
+Additionally you can use the script to invoke the terraria server commands (see below).
 
 ## Setup
 Make sure that you have downloaded the dedicated terraria server from [the official Wiki](https://terraria.wiki.gg/wiki/Server#Downloads) and followed the ["How to (RPI / Others OSes)"](https://terraria.wiki.gg/wiki/Server#How_to_(RPI_/_Others_OSes)) there before using the TerrariaService.
