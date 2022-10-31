@@ -55,7 +55,7 @@ init()
 	
 	FIFO="${WRITE_DIR}/server.fifo"		# First in, First out file for commands
 	CMDOUT="${WRITE_DIR}/server.out"	# Server output log
-	PIDFILE="${WRITE_DIR}/server.pid"	# Server proces ID
+	PIDFILE="${WRITE_DIR}/server.pid"	# Server process ID
 	ERRLOG="${WRITE_DIR}/errors.log"	# Error log
 
 	TERRARIA_CONFIG="${TERRARIA_PATH}/serverconfig.txt"
@@ -284,7 +284,7 @@ start_service()
 	
 	# Attempt to start the process along with the PID into the PIDFILE
 	exec_user "tail -f ${FIFO} | ${INVOKE} >> ${CMDOUT} 2>&1 & echo \$! > ${PIDFILE}"
-
+	
 	# Check if online
 	if [ "$?" -ne "0" ]; then
 		echo "Unable to start ${SERVICE_NAME}"
@@ -300,8 +300,6 @@ stop_service()
 {
 	echo "Stopping server.."
 	terraria_command "exit"
-
-	## TODO: Cleanly close FIFO tail
 }
 
 
@@ -340,11 +338,14 @@ is_running()
 
 
 # Save game
-## TODO: Check if server is running
 save()
 {
-	echo "Saving game.."
-	terraria_command "save"
+	if is_running; then
+		echo "Saving game.."
+		terraria_command "save"
+	else
+		echo "Server is not running."
+	fi
 }
 
 
@@ -360,131 +361,195 @@ terraria_command()
 # Kick player
 kick()
 {
-	read -r -p "Kick player $1? [y/N]" response
-	echo ""
-	case "$response" in
-	[yY][eE][sS]|[yY]) 
-			terraria_command "kick $1"
-			tail -n 2 "${CMDOUT}"; echo ""
-			;;
-		*)
-			exit 1
-			;;
-	esac
+	if is_running; then
+		read -r -p "Kick player $1? [y/N]" response
+		echo ""
+		case "$response" in
+		[yY][eE][sS]|[yY]) 
+				terraria_command "kick $1"
+				tail -n 2 "${CMDOUT}"; echo ""
+				;;
+			*)
+				exit 1
+				;;
+		esac
+	else
+		echo "Server is not running."
+	fi
 }
 
 # Ban player
 ban()
 {
-	read -r -p "Ban player $1? [y/N]" response
-	echo ""
-	case "$response" in
-	[yY][eE][sS]|[yY]) 
-			terraria_command "ban $1"
-			tail -n 2 "${CMDOUT}"; echo ""
-			;;
-		*)
-			exit 1
-			;;
-	esac
+	if is_running; then
+		read -r -p "Ban player $1? [y/N]" response
+		echo ""
+		case "$response" in
+		[yY][eE][sS]|[yY]) 
+				terraria_command "ban $1"
+				tail -n 2 "${CMDOUT}"; echo ""
+				;;
+			*)
+				exit 1
+				;;
+		esac
+	else
+		echo "Server is not running."
+	fi
 }
 
 # Show password
 show_password()
 {
-	terraria_command "password"
-	tail -n 1 "${CMDOUT}"; echo ""
+	if is_running; then
+		terraria_command "password"
+		tail -n 1 "${CMDOUT}"; echo ""
+	else
+		echo "Server is not running."
+	fi
 }
 
 # Set password
 set_password()
 {
-	terraria_command "password $1"
-	tail -n 1 "${CMDOUT}"; echo ""
+	if is_running; then
+		terraria_command "password $1"
+		tail -n 1 "${CMDOUT}"; echo ""
+	else
+		echo "Server is not running."
+	fi
 }
 
 # Show Version
 version()
 {
-	terraria_command "version"
-	tail -n 1 "${CMDOUT}"; echo ""
+	if is_running; then
+		terraria_command "version"
+		tail -n 1 "${CMDOUT}"; echo ""
+	else
+		echo "Server is not running."
+	fi
 }
 
 # Show ingame time
 time()
 {
-	terraria_command "time"
-	tail -n 1 "${CMDOUT}"; echo ""
+	if is_running; then
+		terraria_command "time"
+		tail -n 1 "${CMDOUT}"; echo ""
+	else
+		echo "Server is not running."
+	fi
 }
 
 # Show Port (1 line)
 port()
 {
-	terraria_command "port"
-	tail -n 1 "${CMDOUT}"; echo ""
+	if is_running; then
+		terraria_command "port"
+		tail -n 1 "${CMDOUT}"; echo ""
+	else
+		echo "Server is not running."
+	fi
 }
 
 # Show maximum number of players (1 line)
 maxplayers()
 {
-	terraria_command "maxplayers"
-	tail -n 1 "${CMDOUT}"; echo ""
+	if is_running; then
+		terraria_command "maxplayers"
+		tail -n 1 "${CMDOUT}"; echo ""
+	else
+		echo "Server is not running."
+	fi
 }
 
 # Say something as the server (1 line)
 say()
 {
-	terraria_command "say $1"
-	tail -n 1 "${CMDOUT}"; echo ""
+	if is_running; then
+		terraria_command "say $1"
+		tail -n 1 "${CMDOUT}"; echo ""
+	else
+		echo "Server is not running."
+	fi
 }
 
 # Print the message of the day (1 line)
 print_motd()
 {
-	terraria_command "motd"
-	tail -n 1 "${CMDOUT}"; echo ""
+	if is_running; then
+		terraria_command "motd"
+		tail -n 1 "${CMDOUT}"; echo ""
+	else
+		echo "Server is not running."
+	fi
 }
 
 # Change the message of the day
 change_motd()
 {
-	terraria_command "motd $1"
-	terraria_command "motd"
-	tail -n 1 "${CMDOUT}"; echo ""
+	if is_running; then
+		terraria_command "motd $1"
+		terraria_command "motd"
+		tail -n 1 "${CMDOUT}"; echo ""
+	else
+		echo "Server is not running."
+	fi
 }
 
 # Set ingame time to dawn
 dawn()
 {
-	terraria_command "dawn"
-	echo "Time set to dawn"
+	if is_running; then
+		terraria_command "dawn"
+		echo "Time set to dawn"
+	else
+		echo "Server is not running."
+	fi
 }
 
 # Set ingame time to noon
 noon()
 {
-	terraria_command "noon"
-	echo "Time set to noon"
+	if is_running; then
+		terraria_command "noon"
+		echo "Time set to noon"
+	else
+		echo "Server is not running."
+	fi
 }
 
 # Set ingame time to dusk
 dusk()
 {
-	terraria_command "dusk"
-	echo "Time set to dusk"
+	if is_running; then
+		terraria_command "dusk"
+		echo "Time set to dusk"
+	else
+		echo "Server is not running."
+	fi
 }
 
 # Set ingame time to midnight
 midnight()
 {
-	terraria_command "midnight"
-	echo "Time set to midnight"
+	if is_running; then
+		terraria_command "midnight"
+		echo "Time set to midnight"
+	else
+		echo "Server is not running."
+	fi
 }
 
 # Force the water to settle
 settle()
 {
-	terraria_command "settle"
+	if is_running; then
+		terraria_command "settle"
+	else
+		echo "Server is not running."
+	fi
 }
 
 
