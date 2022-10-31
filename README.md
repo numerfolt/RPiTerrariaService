@@ -46,7 +46,7 @@ terraria help
 ```
 
 ### Validate files
-Before starting the service, run the following command to avoid problems with missing files or wrong permissions. If it does not work, try fixing it manually with ```chown```.
+Before starting the service, run the following command to avoid problems with missing files or wrong permissions. If it does not work, try fixing it manually with ```chown``` on the working directory (for the user specified in config.cfg and terraria.service).
 ```bash
 # Validate server and service files
 $ terraria checkfiles
