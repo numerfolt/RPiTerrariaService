@@ -19,6 +19,7 @@ $ cp config.cfg.example config.cfg
 $ cp terraria.service.example terraria.service
 ```
 You can now edit the files to fit your needs.
+Make sure you enter the correct user in both files.
 
 ### Systemd setup
 ```bash
