@@ -60,7 +60,7 @@ init()
 
 	TERRARIA_CONFIG="${TERRARIA_PATH}/serverconfig.txt"
 
-	ARGS="-config serverconfig.txt"		# Server requires a server config to instantly boot
+	ARGS="-config ${TERRARIA_PATH}/serverconfig.txt"		# Server requires a server config to instantly boot
 	INVOKE="mono --server --gc=sgen -O=all ${TERRARIA_PATH}/${TERRARIA_BINARY} ${ARGS}"
 }
 init
