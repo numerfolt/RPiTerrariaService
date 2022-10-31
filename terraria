@@ -432,7 +432,7 @@ version()
 }
 
 # Show ingame time
-time()
+print_time()
 {
 	if is_running; then
 		terraria_command "time"
@@ -623,7 +623,7 @@ case "$1" in
 		version
 		;;
 	time)
-		time
+		print_time
 		;;
 	port)
 		port

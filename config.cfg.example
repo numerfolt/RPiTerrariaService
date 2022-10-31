@@ -4,7 +4,7 @@
 DEBUGGING=false
 
 ## Terraria Server
-# Absolute path to terraria server
+# Absolute path to terraria server (must not end with /)
 TERRARIA_PATH=/opt/terraria
 
 # Terraria server executable
