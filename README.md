@@ -3,7 +3,7 @@ Service script for Terraria dedicated servers.
 This service script lets you start, stop and save the server while running it in the background to avoid using programs like tmux and screen.
 
 ## Setup
-Make sure that you have downloaded the dedicated terraria server from [the official Wiki]([url](https://terraria.wiki.gg/wiki/Server#Downloads)) and followed the ["How to (RPI / Others OSes)"]([url](https://terraria.wiki.gg/wiki/Server#How_to_(RPI_/_Others_OSes))) before using the TerrariaService.
+Make sure that you have downloaded the dedicated terraria server from [the official Wiki](https://terraria.wiki.gg/wiki/Server#Downloads) and followed the ["How to (RPI / Others OSes)"](https://terraria.wiki.gg/wiki/Server#How_to_(RPI_/_Others_OSes)) before using the TerrariaService.
 
 ### Repository and configuration files
 ```bash
