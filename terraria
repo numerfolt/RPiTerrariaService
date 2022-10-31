@@ -284,6 +284,7 @@ start_service()
 	
 	# Attempt to start the process along with the PID into the PIDFILE
 	exec_user "tail -f ${FIFO} | ${INVOKE} >> ${CMDOUT} 2>&1 & echo \$! > ${PIDFILE}"
+	systemctl start terraria.service
 	
 	# Check if online
 	if [ "$?" -ne "0" ]; then
@@ -300,6 +301,8 @@ stop_service()
 {
 	echo "Stopping server.."
 	terraria_command "exit"
+	terraria_flush
+	systemctl stop terraria.service
 }
 
 
@@ -310,6 +313,7 @@ kill_service()
 		echo "Killing server process.."
 		exec_user "kill -TERM $(cat ${PIDFILE} 2> /dev/null) 2> /dev/null"
 		exec_user "rm ${PIDFILE} 2> /dev/null"
+		systemctl stop terraria.service
 	fi
 }
 
@@ -343,6 +347,7 @@ save()
 	if is_running; then
 		echo "Saving game.."
 		terraria_command "save"
+		terraria_flush
 	else
 		echo "Server is not running."
 	fi
@@ -505,6 +510,7 @@ change_motd()
 {
 	if is_running; then
 		terraria_command "motd $1"
+		terraria_flush
 		terraria_command "motd"
 		tail -2 "${CMDOUT}" | head -1
 		terraria_flush
@@ -518,6 +524,7 @@ dawn()
 {
 	if is_running; then
 		terraria_command "dawn"
+		terraria_flush
 		echo "Time set to dawn"
 	else
 		echo "Server is not running."
@@ -529,6 +536,7 @@ noon()
 {
 	if is_running; then
 		terraria_command "noon"
+		terraria_flush
 		echo "Time set to noon"
 	else
 		echo "Server is not running."
@@ -540,6 +548,7 @@ dusk()
 {
 	if is_running; then
 		terraria_command "dusk"
+		terraria_flush
 		echo "Time set to dusk"
 	else
 		echo "Server is not running."
@@ -551,6 +560,7 @@ midnight()
 {
 	if is_running; then
 		terraria_command "midnight"
+		terraria_flush
 		echo "Time set to midnight"
 	else
 		echo "Server is not running."
@@ -562,6 +572,8 @@ settle()
 {
 	if is_running; then
 		terraria_command "settle"
+		terraria_flush
+		echo "Settling water"
 	else
 		echo "Server is not running."
 	fi
