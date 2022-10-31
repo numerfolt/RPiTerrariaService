@@ -284,7 +284,6 @@ start_service()
 	
 	# Attempt to start the process along with the PID into the PIDFILE
 	exec_user "tail -f ${FIFO} | ${INVOKE} >> ${CMDOUT} 2>&1 & echo \$! > ${PIDFILE}"
-	systemctl start terraria.service
 	
 	# Check if online
 	if [ "$?" -ne "0" ]; then
