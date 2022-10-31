@@ -353,10 +353,14 @@ save()
 terraria_command()
 {
 	echo $1 >> ${FIFO}	# Send command to file
-	sleep 1s
-	> ${FIFO}		# Clear file
 }
 
+# Flush the FIFO file
+terraria_flush()
+{
+	sleep 0.5s
+	> ${FIFO}		# Clear file
+}
 
 # Kick player
 kick()
@@ -367,7 +371,8 @@ kick()
 		case "$response" in
 		[yY][eE][sS]|[yY]) 
 				terraria_command "kick $1"
-				tail -n 2 "${CMDOUT}"; echo ""
+				tail -3 "${CMDOUT}" | head -2
+				terraria_flush
 				;;
 			*)
 				exit 1
@@ -387,7 +392,8 @@ ban()
 		case "$response" in
 		[yY][eE][sS]|[yY]) 
 				terraria_command "ban $1"
-				tail -n 2 "${CMDOUT}"; echo ""
+				tail -3 "${CMDOUT}" | head -2
+				terraria_flush
 				;;
 			*)
 				exit 1
@@ -403,7 +409,8 @@ show_password()
 {
 	if is_running; then
 		terraria_command "password"
-		tail -n 1 "${CMDOUT}"; echo ""
+		tail -2 "${CMDOUT}" | head -1
+		terraria_flush
 	else
 		echo "Server is not running."
 	fi
@@ -414,7 +421,8 @@ set_password()
 {
 	if is_running; then
 		terraria_command "password $1"
-		tail -n 1 "${CMDOUT}"; echo ""
+		tail -2 "${CMDOUT}" | head -1
+		terraria_flush
 	else
 		echo "Server is not running."
 	fi
@@ -425,7 +433,8 @@ version()
 {
 	if is_running; then
 		terraria_command "version"
-		tail -n 1 "${CMDOUT}"; echo ""
+		tail -2 "${CMDOUT}" | head -1
+		terraria_flush
 	else
 		echo "Server is not running."
 	fi
@@ -436,7 +445,8 @@ print_time()
 {
 	if is_running; then
 		terraria_command "time"
-		tail -n 1 "${CMDOUT}"; echo ""
+		tail -2 "${CMDOUT}" | head -1
+		terraria_flush
 	else
 		echo "Server is not running."
 	fi
@@ -447,7 +457,8 @@ port()
 {
 	if is_running; then
 		terraria_command "port"
-		tail -n 1 "${CMDOUT}"; echo ""
+		tail -2 "${CMDOUT}" | head -1
+		terraria_flush
 	else
 		echo "Server is not running."
 	fi
@@ -458,7 +469,8 @@ maxplayers()
 {
 	if is_running; then
 		terraria_command "maxplayers"
-		tail -n 1 "${CMDOUT}"; echo ""
+		tail -2 "${CMDOUT}" | head -1
+		terraria_flush
 	else
 		echo "Server is not running."
 	fi
@@ -469,7 +481,8 @@ say()
 {
 	if is_running; then
 		terraria_command "say $1"
-		tail -n 1 "${CMDOUT}"; echo ""
+		tail -2 "${CMDOUT}" | head -1
+		terraria_flush
 	else
 		echo "Server is not running."
 	fi
@@ -480,7 +493,8 @@ print_motd()
 {
 	if is_running; then
 		terraria_command "motd"
-		tail -n 1 "${CMDOUT}"; echo ""
+		tail -2 "${CMDOUT}" | head -1
+		terraria_flush
 	else
 		echo "Server is not running."
 	fi
@@ -492,7 +506,8 @@ change_motd()
 	if is_running; then
 		terraria_command "motd $1"
 		terraria_command "motd"
-		tail -n 1 "${CMDOUT}"; echo ""
+		tail -2 "${CMDOUT}" | head -1
+		terraria_flush
 	else
 		echo "Server is not running."
 	fi
