@@ -411,7 +411,7 @@ version()
 }
 
 # Show ingame time
-time()
+print_time()
 {
 	terraria_command "time"
 	tail -n 1 "${CMDOUT}"; echo ""
@@ -558,7 +558,7 @@ case "$1" in
 		version
 		;;
 	time)
-		time
+		print_time
 		;;
 	port)
 		port
