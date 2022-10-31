@@ -87,16 +87,33 @@ usage()
 {
 	echo "Usage: $0 <COMMAND>"
 	echo
-	echo "Commands:"
+	echo "Service commands:"
 	echo -e "  start\t\t Starts the server"
 	echo -e "  stop\t\t Stops the server without saving"
-	echo -e "  save\t\t Saves the world"
-	echo -e "  exit\t\t Saves the world and stop the server"
-	echo -e "  save-exit\t Alias for 'exit'"
 	echo -e "  checkfiles\t Checks the files for any issues"
 	echo -e "  state\t\t Displays the server state"
 	echo -e "  kill\t\t Kills the server process"
 	echo -e "  help\t\t Show this help message"
+	echo ""
+	echo "Server commands:"
+	echo -e "  save\t\t\t Save the game world"
+	echo -e "  exit\t\t\t Save the game world and stop the server"
+	echo -e "  kick <\"player name\">\t Kicks a player from the server."
+	echo -e "  ban <\"player name\">\t Bans a player from the server."
+	echo -e "  password\t\t Show password."
+	echo -e "  password <pass>\t Change password."
+	echo -e "  version\t\t Print version number."
+	echo -e "  time\t\t\t Display game time."
+	echo -e "  port\t\t\t Print the listening port."
+	echo -e "  maxplayers\t\t Print the max number of players."
+	echo -e "  say <\"message\">\t\t Send a message to all players. They will see the message in yellow prefixed with <server> in the chat."
+	echo -e "  motd\t\t\t Print MOTD."
+	echo -e "  motd <\"message\">\t Change MOTD."
+	echo -e "  dawn\t\t\t Change time to dawn (4:30 AM)."
+	echo -e "  noon\t\t\t Change time to noon (12:00 PM)."
+	echo -e "  dusk\t\t\t Change time to dusk (7:30 PM)."
+	echo -e "  midnight\t\t Change time to midnight (12:00 AM)."
+	echo -e "  settle\t\t Settle all water."
 }
 
 
@@ -340,11 +357,141 @@ terraria_command()
 }
 
 
+# Kick player
+kick()
+{
+	read -r -p "Kick player $1? [y/N]" response
+	echo ""
+	case "$response" in
+	[yY][eE][sS]|[yY]) 
+			terraria_command "kick $1"
+			tail -n 2 "${CMDOUT}"; echo ""
+			;;
+		*)
+			exit 1
+			;;
+	esac
+}
+
+# Ban player
+ban()
+{
+	read -r -p "Ban player $1? [y/N]" response
+	echo ""
+	case "$response" in
+	[yY][eE][sS]|[yY]) 
+			terraria_command "ban $1"
+			tail -n 2 "${CMDOUT}"; echo ""
+			;;
+		*)
+			exit 1
+			;;
+	esac
+}
+
+# Show password
+show_password()
+{
+	terraria_command "password"
+	tail -n 1 "${CMDOUT}"; echo ""
+}
+
+# Set password
+set_password()
+{
+	terraria_command "password $1"
+	tail -n 1 "${CMDOUT}"; echo ""
+}
+
+# Show Version
+version()
+{
+	terraria_command "version"
+	tail -n 1 "${CMDOUT}"; echo ""
+}
+
+# Show ingame time
+time()
+{
+	terraria_command "time"
+	tail -n 1 "${CMDOUT}"; echo ""
+}
+
+# Show Port (1 line)
+port()
+{
+	terraria_command "port"
+	tail -n 1 "${CMDOUT}"; echo ""
+}
+
+# Show maximum number of players (1 line)
+maxplayers()
+{
+	terraria_command "maxplayers"
+	tail -n 1 "${CMDOUT}"; echo ""
+}
+
+# Say something as the server (1 line)
+say()
+{
+	terraria_command "say $1"
+	tail -n 1 "${CMDOUT}"; echo ""
+}
+
+# Print the message of the day (1 line)
+print_motd()
+{
+	terraria_command "motd"
+	tail -n 1 "${CMDOUT}"; echo ""
+}
+
+# Change the message of the day
+change_motd()
+{
+	terraria_command "motd $1"
+	terraria_command "motd"
+	tail -n 1 "${CMDOUT}"; echo ""
+}
+
+# Set ingame time to dawn
+dawn()
+{
+	terraria_command "dawn"
+	echo "Time set to dawn"
+}
+
+# Set ingame time to noon
+noon()
+{
+	terraria_command "noon"
+	echo "Time set to noon"
+}
+
+# Set ingame time to dusk
+dusk()
+{
+	terraria_command "dusk"
+	echo "Time set to dusk"
+}
+
+# Set ingame time to midnight
+midnight()
+{
+	terraria_command "midnight"
+	echo "Time set to midnight"
+}
+
+# Force the water to settle
+settle()
+{
+	terraria_command "settle"
+}
+
+
 ## Middleware
 if $DEBUGGING; then
 	debug
 fi
-
 
 ## Routing
 case "$1" in
@@ -364,15 +511,6 @@ case "$1" in
 	stop)
 		## A service handles stop on its own by killing the process PID
 		;;
-	save-exit)
-		stop_service
-		;;
-	exit)
-		stop_service
-		;;
-	save)
-		save
-		;;
 	checkfiles)
 		check_files
 		;;
@@ -383,11 +521,79 @@ case "$1" in
 			echo "Server is offline"
 		fi
 		;;
+	kill)
+		kill_service
+		;;
 	help|--help|-h)
 		usage
 		;;
-	kill)
-		kill_service
+	save)
+		save
+		;;
+	exit)
+		stop_service
+		;;
+	kick)
+		if [[ -z "$2" ]]; then
+			echo "Usage: kick <player>"
+		else
+			kick "$2"
+		fi
+		;;
+	ban)
+		if [[ -z "$2" ]]; then
+			echo "Usage: ban <player>"
+		else
+			ban "$2"
+		fi
+		;;
+	password)
+		if [[ -z "$2" ]]; then
+			show_password
+		else
+			set_password "$2"
+		fi
+		;;
+	version)
+		version
+		;;
+	time)
+		time
+		;;
+	port)
+		port
+		;;
+	maxplayers)
+		maxplayers
+		;;
+	say)
+		if [[ -z "$2" ]]; then
+			echo "Usage: say <words>"
+		else
+			say "$2"
+		fi
+		;;
+	motd)
+		if [[ -z "$2" ]]; then
+			print_motd
+		else
+			change_motd "$2"
+		fi
+		;;
+	dawn)
+		dawn
+		;;
+	noon)
+		noon
+		;;
+	dusk)
+		dusk
+		;;
+	midnight)
+		midnight
+		;;
+	settle)
+		settle
 		;;
 	*)
 		echo "Unknown command"
