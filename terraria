@@ -300,7 +300,6 @@ stop_service()
 {
 	echo "Stopping server.."
 	terraria_command "exit"
-	terraria_flush
 }
 
 
@@ -351,13 +350,16 @@ save()
 terraria_command()
 {
 	echo $1 >> ${FIFO}	# Send command to file
+	sleep 0.5s
+	dd if=/dev/null iflag=nonblock of="${FIFO}" status=none		# Clear file
 }
 
-# Flush the FIFO file
-terraria_flush()
+# Print the last $1 lines of server output
+print_output()
 {
-	sleep 0.5s
-	> ${FIFO}		# Clear file
+	hn="$1"
+	tn=$((hn+1))
+	tail -"$tn" server.out | head -"$hn" | sed -e 's/^: : *//g;s/^: *//g'
 }
 
 # Kick player
@@ -368,8 +370,7 @@ kick()
 	case "$response" in
 		[yY][eE][sS]|[yY]) 
 			terraria_command "kick $1"
-			tail -3 "${CMDOUT}" | head -2
-			terraria_flush
+			print_output 2
 			;;
 		*)
 			exit 1
@@ -385,8 +386,7 @@ ban()
 	case "$response" in
 		[yY][eE][sS]|[yY]) 
 			terraria_command "ban $1"
-			tail -3 "${CMDOUT}" | head -2
-			terraria_flush
+			print_output 2
 			;;
 		*)
 			exit 1
@@ -398,81 +398,70 @@ ban()
 show_password()
 {
 	terraria_command "password"
-	tail -2 "${CMDOUT}" | head -1
-	terraria_flush
+	print_output 1
 }
 
 # Set password
 set_password()
 {
 	terraria_command "password $1"
-	tail -2 "${CMDOUT}" | head -1
-	terraria_flush
+	print_output 1
 }
 
 # Show Version
 version()
 {
 	terraria_command "version"
-	tail -2 "${CMDOUT}" | head -1
-	terraria_flush
+	print_output 1
 }
 
 # Show ingame time
 print_time()
 {
 	terraria_command "time"
-	tail -2 "${CMDOUT}" | head -1
-	terraria_flush
+	print_output 1
 }
 
 # Show Port (1 line)
 port()
 {
 	terraria_command "port"
-	tail -2 "${CMDOUT}" | head -1
-	terraria_flush
+	print_output 1
 }
 
 # Show maximum number of players (1 line)
 maxplayers()
 {
 	terraria_command "maxplayers"
-	tail -2 "${CMDOUT}" | head -1
-	terraria_flush
+	print_output 1
 }
 
 # Say something as the server (1 line)
 say()
 {
 	terraria_command "say $1"
-	tail -2 "${CMDOUT}" | head -1
-	terraria_flush
+	print_output 1
 }
 
 # Print the message of the day (1 line)
 print_motd()
 {
 	terraria_command "motd"
-	tail -2 "${CMDOUT}" | head -1
-	terraria_flush
+	print_output 1
 }
 
 # Change the message of the day
 change_motd()
 {
 	terraria_command "motd $1"
-	terraria_flush
 	terraria_command "motd"
-	tail -2 "${CMDOUT}" | head -1
-	terraria_flush
+	print_output 1
 }
 
 # Set ingame time to dawn
 dawn()
 {
 	terraria_command "dawn"
-	terraria_flush
 	echo "Time set to dawn"
 }
 
@@ -480,7 +469,6 @@ dawn()
 noon()
 {
 	terraria_command "noon"
-	terraria_flush
 	echo "Time set to noon"
 }
 
@@ -488,7 +476,6 @@ noon()
 dusk()
 {
 	terraria_command "dusk"
-	terraria_flush
 	echo "Time set to dusk"
 }
 
@@ -496,7 +483,6 @@ dusk()
 midnight()
 {
 	terraria_command "midnight"
-	terraria_flush
 	echo "Time set to midnight"
 }
 
@@ -505,7 +491,6 @@ settle()
 {
 	
 	terraria_command "settle"
-	terraria_flush
 	echo "Settling water"
 	
 }
