@@ -84,3 +84,8 @@ noon|Change time to noon (12:00 PM)
 dusk|Change time to dusk (7:30 PM)
 midnight|Change time to midnight (12:00 AM)
 settle|Settle all water
+
+## Miscellaneous
+- The service and server status are two different things. One can be active while the other isn't.
+- Make sure you start the service before starting the server.
+- You can edit the timeout of the service start at boot in the terraria.service file (Edit the line `ExecStartPre=/bin/sleep 60`)
