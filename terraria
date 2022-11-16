@@ -493,10 +493,15 @@ settle()
 	
 }
 
-
 ## Middleware
 if $DEBUGGING; then
 	debug
+fi
+
+## Check User before executing any command
+if [ $CURRENT_USER != $USERNAME ] && [ "$(id -u)" != "0" ]; then
+	echo "Run this script as the $USERNAME user or edit the config.cfg file!"
+	exit 1
 fi
 
 ## Routing
