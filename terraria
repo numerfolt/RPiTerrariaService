@@ -359,7 +359,7 @@ print_output()
 {
 	hn="$1"
 	tn=$((hn+1))
-	tail -"$tn" server.out | head -"$hn" | sed -e 's/^: : *//g;s/^: *//g'
+	tail -"$tn" "$CMDOUT" | head -"$hn" | sed -e 's/^: : *//g;s/^: *//g'
 }
 
 # Kick player
