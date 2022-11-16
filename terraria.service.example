@@ -5,7 +5,7 @@ Description=Terraria server service
 User=terraria
 Group=terraria
 
-#Uncomment this line if you want to delay the service start
+#Uncomment the next line if you want to delay the service start (time in seconds, default = 60)
 #ExecStartPre=/bin/sleep 60
 
 PIDFile=/opt/TerrariaService/server.pid
