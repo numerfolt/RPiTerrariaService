@@ -357,7 +357,7 @@ print_output()
 {
 	hn="$1"
 	tn=$((hn+1))
-	exec_user "tail -$tn $CMDOUT | head -$hn 2> $ERRLOG | sed -e 's/^: : *//g;s/^: *//g' 2> $ERRLOG"
+	exec_user "tail -$tn $CMDOUT | head -$hn | sed -e 's/^: : *//g;s/^: *//g'"
 }
 
 # Kick player
