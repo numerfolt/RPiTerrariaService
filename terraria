@@ -10,7 +10,6 @@
 ### END INIT INFO
 # Source: https://wiki.debian.org/LSBInitScripts
 
-
 CONFIG_PATH=`readlink -e $0 | sed "s:[^/]*$:config.cfg:"`
 
 ## Import configuration file
@@ -283,7 +282,7 @@ start_service()
 	fi
 	
 	# Attempt to start the process along with the PID into the PIDFILE
-	exec_user "tail -f ${FIFO} | ${INVOKE} >> ${CMDOUT} 2>&1 & echo \$! > ${PIDFILE}"
+	exec_user "tail -f ${FIFO} 2>${ERRLOG} | ${INVOKE} >> ${CMDOUT} 2>&1 & echo \$! > ${PIDFILE}"
 	
 	# Check if online
 	if [ "$?" -ne "0" ]; then
@@ -342,15 +341,14 @@ save()
 {
 		echo "Saving game.."
 		terraria_command "save"
-		terraria_flush
 }
 
 
 # Execute server command
 terraria_command()
 {
-	echo $1 >> ${FIFO}	# Send command to file
-	sleep 0.5s
+	exec_user "echo $1 >> ${FIFO}"	# Send command to file
+	sleep 0.25s
 	dd if=/dev/null iflag=nonblock of="${FIFO}" status=none		# Clear file
 }
 
@@ -359,17 +357,17 @@ print_output()
 {
 	hn="$1"
 	tn=$((hn+1))
-	tail -"$tn" "$CMDOUT" | head -"$hn" | sed -e 's/^: : *//g;s/^: *//g'
+	exec_user "tail -$tn $CMDOUT 2> $ERRLOG | head -$hn 2> $ERRLOG | sed -e 's/^: : *//g;s/^: *//g' 2> $ERRLOG"
 }
 
 # Kick player
 kick()
 {
-	read -r -p "Kick player $1? [y/N]" response
+	read -r -p "Kick player $1? [y/N]" response	#Get the confirmation
 	echo ""
 	case "$response" in
 		[yY][eE][sS]|[yY]) 
-			terraria_command "kick $1"
+			terraria_command "kick $1"	#Kick the User (if it exists)
 			print_output 2
 			;;
 		*)
@@ -381,11 +379,11 @@ kick()
 # Ban player
 ban()
 {
-	read -r -p "Ban player $1? [y/N]" response
+	read -r -p "Ban player $1? [y/N]" response	#Get the confirmation
 	echo ""
 	case "$response" in
 		[yY][eE][sS]|[yY]) 
-			terraria_command "ban $1"
+			terraria_command "ban $1"	#Ban the User (if it exists)
 			print_output 2
 			;;
 		*)
