@@ -335,6 +335,14 @@ is_running()
 	return 0
 }
 
+# Show the directories used by this service
+show_directories()
+{
+	echo "The service directory is"
+	echo "$WRITE_DIR"
+	echo "The server directory is"
+	echo "$TERRARIA_PATH"
+}
 
 # Save game
 save()
@@ -537,6 +545,9 @@ case "$1" in
 		;;
 	help|--help|-h)
 		usage
+		;;
+	dir)
+		show_directories
 		;;
 	save)
 		save
