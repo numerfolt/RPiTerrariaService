@@ -61,6 +61,7 @@ stop|Stops the server
 checkfiles|Validates the service and server files
 state|Displays the server state
 kill|Kills the server process
+dir|Shows the directories in use
 help|Shows the help message
 
 Available server commands
