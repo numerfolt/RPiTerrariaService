@@ -90,3 +90,6 @@ settle|Settle all water
 - The service and server status are two different things. One can be active while the other isn't.
 - Make sure you start the service before starting the server.
 - You can edit the timeout of the service start at boot in the terraria.service file (Edit the line `ExecStartPre=/bin/sleep 60`)
+# Credit
+Original repository by Arceden: https://github.com/Arceden/TerrariaService
+All changes made can be viewed in the commit history.
